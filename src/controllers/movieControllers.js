@@ -12,13 +12,12 @@ const getMovies = (req, res) => {
     });
 };
 
-
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
-  
+
   database
-  .query("select * from movies where id = ?", [id])
-  .then((result) => {
+    .query("select * from movies where id = ?", [id])
+    .then((result) => {
       const [movies] = result;
       if (movies[0] != null) {
         res.json(movies[0]);
@@ -30,12 +29,13 @@ const getMovieById = (req, res) => {
       console.error(err);
       res.sendStatus(404);
     });
-  };
-  
-  const postMovie = (req, res) => {
-    const { title, director, year, color, duration } = req.body;
-  
-    database.query(
+};
+
+const postMovie = (req, res) => {
+  const { title, director, year, color, duration } = req.body;
+
+  database
+    .query(
       "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
       [title, director, year, color, duration]
     )
@@ -46,13 +46,14 @@ const getMovieById = (req, res) => {
       console.error(err);
       res.sendStatus(500);
     });
-  };
+};
 
-  const updateMovie = (req, res) => {
-    const id = parseInt(req.params.id);
-    const { title, director, year, color, duration } = req.body;
+const updateMovie = (req, res) => {
+  const id = parseInt(req.params.id);
+  const { title, director, year, color, duration } = req.body;
 
-    database.query(
+  database
+    .query(
       "update movies set title = ?, director = ?, year = ?, color = ?, duration = ? where id = ?",
       [title, director, year, color, duration, id]
     )
@@ -67,11 +68,30 @@ const getMovieById = (req, res) => {
       console.error(err);
       res.sendStatus(500);
     });
-  };
+};
 
-  module.exports = {
-    getMovies,
-    getMovieById,
-    postMovie,
-    updateMovie,
+const deleteMovie = (req, res) => {
+  const id = parseInt(req.params.id);
+
+  database
+  .query("delete from movies where id = ?", [id])
+  .then(([result]) => {
+    if (result.affectedRows === 0) {
+      res.sendStatus(404);
+    } else {
+      res.sendStatus(204);
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(500);
+  });
+};
+
+module.exports = {
+  getMovies,
+  getMovieById,
+  postMovie,
+  updateMovie,
+  deleteMovie,
 };
