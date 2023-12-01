@@ -1,17 +1,16 @@
 const Joi = require("joi");
 
-const userSchema = Joi.object({
-    title: Joi.string().max(255).required(),
-    director: Joi.string().max(255).required(),
-    year: Joi.number().integer().min(1900).max(2023).required(),
-    color: Joi.number().integer().min(0).max(1).required(),
-    duration: Joi.string().max(1000).required(),
+const movieSchema = Joi.object({
+  title: Joi.string().max(255).required(),
+  director: Joi.string().max(255).required(),
+  year: Joi.string().max(255).required(),
+  color: Joi.string().max(255).required(),
+  duration: Joi.number().integer().required(),
 });
-
 const validateMovie = (req, res, next) => {
   const { title, director, year, color, duration } = req.body;
 
-  const { error } = userSchema.validate(
+  const { error } = movieSchema.validate(
     { title, director, year, color, duration },
     { abortEarly: false }
   );
@@ -23,5 +22,4 @@ const validateMovie = (req, res, next) => {
   }
 };
 
-
-module.exports = validateMovie
+module.exports = validateMovie;
